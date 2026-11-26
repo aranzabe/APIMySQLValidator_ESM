@@ -1,25 +1,15 @@
-import { Conexion } from '../database/Conexion.js';
+import { pool } from '../database/Conexion.js';
 
-export const dniExiste = (dni = '') => {
-    return new Promise((resolve, reject) => {
-      const conx = new Conexion();
-      conx.dniExisteValidator(dni)
-        .then(msg => {
-          console.log('Existe');
-          resolve(true);
-        })
-        .catch(err => {
-          console.log('No existe');
-          reject(new Error('DNI NO existe'));
-        });
-    });
-   };
-
-   
-export const edadCorrecta = async (edad)=>{
-    if (edad <0){
-        throw new Error('Edad incorrecta desde método');
+export const dniYaExiste = async (dni = '') => {
+    const [rows] = await pool.query('SELECT DNI FROM personas WHERE DNI = ?', [dni]);
+    if (rows.length > 0) {
+        throw new Error('Este usuario ya existe');
     }
-}
+    return true;
+};
 
-
+export const edadCorrecta = (edad) => {
+    if (edad < 0) {
+        throw new Error('Edad incorrecta');
+    }
+};

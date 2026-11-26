@@ -4,16 +4,18 @@ export const router = Router();
 
 import { check, body, param } from 'express-validator';
 import { validarCampos } from '../middlewares/validar-campos.js';
-import { edadCorrecta, dniExiste } from '../helpers/db-validators.js';
+import { edadCorrecta, dniYaExiste } from '../helpers/db-validators.js';
 import { otroMiddleware } from '../middlewares/userMiddlewares.js';
 
 
 //El segundo parámetro (optativo) son los middlewares.
 router.get('/', controlador.usuariosGet)
-router.get('/:dni', param('dni').matches(/^\d+[A-Za-z]$/)
-                    .withMessage('DNI: debe terminar con una letra y estar compuesto por números seguidos de una letra.'),
-                    otroMiddleware,
-            controlador.usuarioGet);
+router.get('/:dni', [
+    param('dni')
+        .matches(/^\d+[A-Za-z]$/)
+        .withMessage('DNI: debe terminar con una letra y estar compuesto por números seguidos de una letra.'),
+    validarCampos
+], controlador.usuarioGet);
 /*
 En el post pondremos:
 {
@@ -29,7 +31,7 @@ En el post pondremos:
 */
 router.post('/', 
 [
-    check('dni').custom( dniExiste ).withMessage('Este usuario ya existe.'),
+    check('dni').custom(dniYaExiste),
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('password', 'El password debe de ser más de 3 letras').isLength({ min: 3 }),
     check('email', 'El correo no es válido').isEmail(),
@@ -41,16 +43,18 @@ router.post('/',
  ],
 controlador.usuariosPost);
 
-router.put('/:dni',param('dni')
-          // .matches(/^\d{8}[A-Za-z]$/)
-          .matches(/^\d+[A-Za-z]$/)
-          .withMessage('DNI: debe terminar con una letra y estar compuesto por números seguidos de una letra.'),
-          controlador.usuariosPut);
-router.delete('/:dni', check('dni')
-          .matches(/^\d+[A-Za-z]$/)
-          .withMessage('DNI: debe terminar con una letra y estar compuesto por números seguidos de una letra.'), 
-          [otroMiddleware,validarCampos],
-          controlador.usuariosDelete);
+router.put('/:dni', [
+    param('dni')
+        .matches(/^\d+[A-Za-z]$/)
+        .withMessage('DNI: debe terminar con una letra y estar compuesto por números seguidos de una letra.'),
+    validarCampos
+], controlador.usuariosPut);
+router.delete('/:dni', [
+    param('dni')
+        .matches(/^\d+[A-Za-z]$/)
+        .withMessage('DNI: debe terminar con una letra y estar compuesto por números seguidos de una letra.'),
+    validarCampos
+], controlador.usuariosDelete);
 
 //Formas de agrupar rutas. Lo del middleware podría ir en la clase server pero quizá sea más entendible aquí, justo antes de la agrupación de rutas.
 // router.use('/acceso',[mids.otroMiddleware, mids.esMayor]); //Para agrupar rutas y aplicarles middlewares.

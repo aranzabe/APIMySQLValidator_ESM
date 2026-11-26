@@ -31,9 +31,10 @@ class Server {
     }
 
     listen() {
-        this.app.listen(process.env.PORT, () => {
-            console.log(kleur.green().bold(`🟢 Servidor escuchando en: ${process.env.PORT}`));
-        })
+        const port = process.env.PORT || 3000;
+        this.app.listen(port, () => {
+            console.log(kleur.green().bold(`🟢 Servidor escuchando en: ${port}`));
+        });
     }
 }
 

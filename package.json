@@ -1,10 +1,11 @@
 {
   "name": "midotenv",
   "version": "1.0.0",
-  "description": "",
+  "description": "API REST con Express y MySQL (ESM) + validaciones con express-validator",
   "main": "./app/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./app/app.js",
+    "dev": "nodemon ./app/app.js"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +21,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
+  },
+  "allowScripts": {
+    "fsevents@2.3.3": true
   }
 }
