@@ -12,4 +12,5 @@ export const edadCorrecta = (edad) => {
     if (edad < 0) {
         throw new Error('Edad incorrecta');
     }
+    return true;
 };
