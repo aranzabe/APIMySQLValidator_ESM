@@ -36,15 +36,15 @@ router.post('/',
     check('password', 'El password debe de ser más de 3 letras').isLength({ min: 3 }),
     check('email', 'El correo no es válido').isEmail(),
     body('clave','El campo clave no es correcto').isInt().isLength({ max:3 }),
-    body('edad','Valores de edad no correctos').custom(edadCorrecta),
-    check('tfno', 'Teléfono incorrecto').isMobilePhone(),
+    body('edad','Valores de edad no correctos').notEmpty().isInt().custom(edadCorrecta),
+    check('tfno', 'Teléfono incorrecto').isMobilePhone(''),
     check('rol', 'Rol incorrecto').isIn(['Admin','Mindundi']),
     validarCampos
  ],
 controlador.usuariosPost);
 
 router.put('/:dni', [
-    param('dni')
+    check('dni')
         .matches(/^\d+[A-Za-z]$/)
         .withMessage('DNI: debe terminar con una letra y estar compuesto por números seguidos de una letra.'),
     validarCampos
